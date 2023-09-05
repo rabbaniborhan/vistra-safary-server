@@ -1,20 +1,40 @@
 import express, { Router } from 'express';
+import AuthMiddleware from '../middlewares/auth.middleware';
+import LocationController from '../controllers/location.controller';
 
-const bookingRouter: Router = express.Router();
+const locationRouter: Router = express.Router();
 
-// get all bookings
-bookingRouter.get('/');
+const authMiddleware = new AuthMiddleware();
+const locationInstance = new LocationController();
 
-// get all bookings for an user
-bookingRouter.get('/users/:id');
+// get all locations
+locationRouter.get('/', locationInstance.getAllLocations);
 
-// create a booking for an user
-bookingRouter.post('/users/:id/tour_packages/:id');
+// get a location
+locationRouter.get('/:id', locationInstance.getALocation);
 
-// delete a booking for an user
-bookingRouter.delete('/users/:id/tour_packages/:id');
+// add location
+locationRouter.post(
+  '/',
+  authMiddleware.verifyUser,
+  authMiddleware.checkAdminRole,
+  locationInstance.createLocation
+);
 
-// get a booking for an user
-bookingRouter.get('/:id/users/:id');
+// update location
+locationRouter.put(
+  '/:id',
+  authMiddleware.verifyUser,
+  authMiddleware.checkAdminRole,
+  locationInstance.updateLocation
+);
 
-export default bookingRouter;
+// delete location
+locationRouter.delete(
+  '/:id',
+  authMiddleware.verifyUser,
+  authMiddleware.checkAdminRole,
+  locationInstance.deleteLocation
+);
+
+export default locationRouter;
