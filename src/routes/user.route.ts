@@ -2,7 +2,6 @@ import express, { Router } from 'express';
 import UserController from '../controllers/user.controller';
 import AuthMiddleware from '../middlewares/auth.middleware';
 
-
 const userRouter: Router = express.Router();
 
 const userInstance = new UserController();
@@ -18,10 +17,10 @@ userRouter.post('/login', userInstance.login);
 userRouter.get('/:id', authMiddleware.verifyUser, userInstance.getAnUser);
 
 // update an user
-userRouter.put('/:id', authMiddleware.verifyUser , userInstance.updateAnUser);
+userRouter.put('/:id', authMiddleware.verifyUser, userInstance.updateAnUser);
 
 // delete an user
-userRouter.delete('/:id', authMiddleware.verifyUser , userInstance.deleteAnUser);
+userRouter.delete('/:id', authMiddleware.verifyUser, userInstance.deleteAnUser);
 
 // get all users
 userRouter.get(

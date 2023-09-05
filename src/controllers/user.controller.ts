@@ -73,13 +73,12 @@ export default class UserController {
       await handleError(error, res);
     }
   }
-  
 
   public async updateAnUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const userId = req.user?._id;
-      const {name,photoUrl, address,phoneNumber} = req.body;
+      const { name, photoUrl, address, phoneNumber } = req.body;
 
       if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(404).json({ message: 'User not found' });
@@ -92,7 +91,11 @@ export default class UserController {
       }
 
       await Promise.resolve().then(async () => {
-        const user = await UserModel.findByIdAndUpdate(id,{name , photoUrl , address , phoneNumber },{new:true});
+        const user = await UserModel.findByIdAndUpdate(
+          id,
+          { name, photoUrl, address, phoneNumber },
+          { new: true }
+        );
 
         res.status(200).json(user);
       });
@@ -101,12 +104,10 @@ export default class UserController {
     }
   }
 
-
   public async deleteAnUser(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const userId = req.user?._id;
-      
 
       if (!mongoose.Types.ObjectId.isValid(id)) {
         res.status(404).json({ message: 'User not found' });
@@ -127,11 +128,6 @@ export default class UserController {
       await handleError(error, res);
     }
   }
-
-
-
-
-
 
   public async getAllUsers(req: Request, res: Response): Promise<void> {
     try {
