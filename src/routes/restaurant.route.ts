@@ -1,20 +1,43 @@
 import express, { Router } from 'express';
+import RestaurantController from '../controllers/restaurant.controller';
+import AuthMiddleware from '../middlewares/auth.middleware';
 
-const resortRouter: Router = express.Router();
+const restaurantRouter: Router = express.Router();
 
-// add resort
-resortRouter.post('/');
+const restaurantInstance = new RestaurantController();
+const authMiddleware = new AuthMiddleware();
 
-// update resort
-resortRouter.put('/:id');
+// get all restaurants
+restaurantRouter.get('/:id/restaurants', restaurantInstance.getAllRestaurants);
 
-// delete resort
-resortRouter.delete('/:id');
+// get a restaurant
+restaurantRouter.get(
+  '/:id/restaurants/:rid',
+  restaurantInstance.getARestaurant
+);
 
-// get all resorts
-resortRouter.get('/');
+// add restaurant
+restaurantRouter.post(
+  '/:id/restaurants',
+  authMiddleware.verifyUser,
+  authMiddleware.checkAdminRole,
+  restaurantInstance.createRestaurant
+);
 
-// get a resort
-resortRouter.get('/:id');
+// update restaurant
+restaurantRouter.put(
+  '/:id/restaurants/:rid',
+  authMiddleware.verifyUser,
+  authMiddleware.checkAdminRole,
+  restaurantInstance.updateRestaurant
+);
 
-export default resortRouter;
+// delete restaurant
+restaurantRouter.delete(
+  '/:id/restaurants/:rid',
+  authMiddleware.verifyUser,
+  authMiddleware.checkAdminRole,
+  restaurantInstance.deleteRestaurant
+);
+
+export default restaurantRouter;
