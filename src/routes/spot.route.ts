@@ -1,20 +1,39 @@
 import express, { Router } from 'express';
+import SpotController from '../controllers/sport.controller';
+import AuthMiddleware from '../middlewares/auth.middleware';
 
 const spotRouter: Router = express.Router();
 
-// add spot
-spotRouter.post('/');
-
-// update spot
-spotRouter.put('/:id');
-
-// delete spot
-spotRouter.delete('/:id');
+const spotInstance = new SpotController();
+const authMiddleware = new AuthMiddleware();
 
 // get all spots
-spotRouter.get('/');
+spotRouter.get('/:id/spots', spotInstance.getAllSpots);
 
 // get a spot
-spotRouter.get('/:id');
+spotRouter.get('/:id/spots/:sid', spotInstance.getASpot);
 
-export default spotRouter;
+
+spotRouter.post(
+    '/:id/spots',
+    authMiddleware.verifyUser,
+    authMiddleware.checkAdminRole,
+    spotInstance.createSpot
+  );
+
+
+  spotRouter.put(
+    '/:id/spots/:sid',
+    authMiddleware.verifyUser,
+    authMiddleware.checkAdminRole,
+    spotInstance.updateSpot
+  );
+
+  spotRouter.delete(
+    '/:id/spots/:sid',
+    authMiddleware.verifyUser,
+    authMiddleware.checkAdminRole,
+    spotInstance.deleteSpot
+  );
+  
+  export default spotRouter;
